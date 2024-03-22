@@ -20,22 +20,27 @@ public class CutStick {
         System.out.println(perm);
         for (List<Integer> list: perm) {
             this.k = 0;
-            this.list = perm.get(11);
-            int cost = getMinCost(0, n);
+            this.list = list;//perm.get(11);
+            int cost = getMinCost(0, n, 0);
             minCost = Math.min(minCost, cost);
         }
         System.out.println(minCost);
         return minCost;
     }
 
-    private int getMinCost(int i, int j) {
+    private int getMinCost(int i, int j, int k) {
         if (i == j) return 0;
         if (k >= list.size()) return 0;
-        if (i >= list.get(k) || j <= list.get(k)) return 0;
 
-        k++;
-        int cost = j - i + getMinCost(i, list.get(k - 1)) + getMinCost(list.get(k - 1), j);
-        return cost;
+        int sum = 0;
+        if (list.get(k) > i && list.get(k) < j) {
+            //found
+            sum += j - i + getMinCost(i, list.get(k), k + 1) + getMinCost(list.get(k), j, k + 1);
+        } else {
+            sum += getMinCost(i, j, k + 1);
+        }
+
+        return sum;
     }
 
     private void permute(int index, List<Integer> list) {
@@ -54,7 +59,7 @@ public class CutStick {
 
     public static void main(String[] args) {
         CutStick cutStick = new CutStick();
-        cutStick.minCost(7, new int[]{1,3,4,5});
+        cutStick.minCost(7, new int[]{1,3, 5, 4});
     }
 
 }
